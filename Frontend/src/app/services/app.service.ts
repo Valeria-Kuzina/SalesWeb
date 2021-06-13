@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Sample } from '../models/sample';
+import { Product } from '../models/product';
 
 @Injectable()
 export class AppService{
@@ -8,7 +8,7 @@ export class AppService{
     constructor(private readonly http: HttpClient) {
     }
 
-    get() {
-        return this.http.get<Sample[]>("/sample");
+    getProducts() {
+        return this.http.get<Product[]>("/products");
     }
 }

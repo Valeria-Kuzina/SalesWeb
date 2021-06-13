@@ -1,6 +1,9 @@
+using ElectronixStoreWeb.Controllers;
+using ElectronixStoreWeb.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,9 +19,14 @@ namespace ElectronixStoreWeb
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connection = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
+
+            services.AddScoped<ProductsService>();
+
             services.AddControllers();
             services.AddSpaStaticFiles(configuration =>
             {

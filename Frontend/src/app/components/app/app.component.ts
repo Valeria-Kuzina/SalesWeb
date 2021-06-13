@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppService } from '../../services/app.service';
-import { Sample } from '../../models/sample';
+import { Product } from '../../models/product';
 
 @Component({
     selector: 'app-root',
@@ -12,7 +12,7 @@ import { Sample } from '../../models/sample';
 export class AppComponent implements OnInit {
 
     title = 'Electronix Store';
-    samples: Sample[] = [];
+    products: Product[] = [];
 
     constructor(
         private readonly appService: AppService
@@ -20,6 +20,6 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.appService.get().subscribe(x => this.samples = x);
+        this.appService.getProducts().subscribe(x => this.products = x);
     }
 }
