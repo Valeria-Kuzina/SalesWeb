@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AppService } from '../../services/app.service';
-import { Product } from '../../models/product';
+import { Title } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-root',
@@ -12,14 +11,13 @@ import { Product } from '../../models/product';
 export class AppComponent implements OnInit {
 
     title = 'Electronix Store';
-    products: Product[] = [];
 
     constructor(
-        private readonly appService: AppService
+        private readonly titleService: Title
     ) {
     }
 
     ngOnInit() {
-        this.appService.getProducts().subscribe(x => this.products = x);
+        this.titleService.setTitle(this.title);
     }
 }

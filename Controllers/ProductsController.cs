@@ -1,8 +1,7 @@
-﻿using ElectronixStoreWeb.Database;
+﻿using ElectronixStoreWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ElectronixStoreWeb.Controllers
@@ -18,8 +17,25 @@ namespace ElectronixStoreWeb.Controllers
             this.productService = productService;
         }
 
-        [HttpGet]
+        [HttpGet("")]
         public Task<List<Product>> GetProductsAsync() =>
             productService.Products.ToListAsync();
+
+        [HttpGet("{id:int}")]
+        public Task<Product> GetProductAsync(int id) =>
+            productService.Products.Include(x => x.Images)
+                .Include(x => x.Category).FirstAsync(x => x.Id == id);
+
+        [HttpGet("categories")]
+        public Task<List<Category>> GetCategoriesAsync() =>
+            productService.Categories.ToListAsync();
+
+        [HttpPost("categories")]
+        public Task SaveCategoryAsync([FromBody] Category category) =>
+            productService.SaveCategoryAsync(category);
+
+        [HttpGet("categories/{id:int}")]
+        public Task<Category> GetCategoriesAsync(int id) =>
+            productService.Categories.Include(x => x.Products).FirstAsync(x => x.Id == id);
     }
 }
