@@ -34,5 +34,21 @@ namespace ElectronixStoreWeb.Controllers
 
             await applicationContext.SaveChangesAsync();
         }
+
+        public async Task<Product> SaveProductAsync(Product product)
+        {
+            if (product.Id == default)
+            {
+                applicationContext.Products.Add(product);
+            }
+            else
+            {
+                applicationContext.Entry(product).State = EntityState.Modified;
+            }
+
+            await applicationContext.SaveChangesAsync();
+
+            return product;
+        }
     }
 }

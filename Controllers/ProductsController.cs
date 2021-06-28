@@ -1,13 +1,16 @@
 ﻿using ElectronixStoreWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ElectronixStoreWeb.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly ProductsService productService;
@@ -18,8 +21,10 @@ namespace ElectronixStoreWeb.Controllers
         }
 
         [HttpGet("")]
-        public Task<List<Product>> GetProductsAsync() =>
-            productService.Products.ToListAsync();
+        public Task<List<Product>> GetProductsAsync([FromQuery] int categoryId = default) =>
+            productService.Products
+                .Where(x => categoryId == default || x.CategoryId == categoryId)
+                .OrderBy(x => x.Name).ToListAsync();
 
         [HttpGet("{id:int}")]
         public Task<Product> GetProductAsync(int id) =>
@@ -28,14 +33,22 @@ namespace ElectronixStoreWeb.Controllers
 
         [HttpGet("categories")]
         public Task<List<Category>> GetCategoriesAsync() =>
-            productService.Categories.ToListAsync();
+            productService.Categories.OrderBy(x => x.Name).ToListAsync();
 
         [HttpPost("categories")]
         public Task SaveCategoryAsync([FromBody] Category category) =>
             productService.SaveCategoryAsync(category);
 
         [HttpGet("categories/{id:int}")]
-        public Task<Category> GetCategoriesAsync(int id) =>
-            productService.Categories.Include(x => x.Products).FirstAsync(x => x.Id == id);
+        public async Task<Category> GetCategoriesAsync(int id)
+        {
+            var res = await productService.Categories.Include(x => x.Products).FirstAsync(x => x.Id == id);
+
+            return res;
+        }
+
+        [HttpPost("")]
+        public Task<Product> SaveProductAsync([FromBody] Product product) =>
+            productService.SaveProductAsync(product);
     }
 }

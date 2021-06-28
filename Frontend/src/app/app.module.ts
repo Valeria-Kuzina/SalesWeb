@@ -6,9 +6,12 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
-import { CatalogueCreationModalComponent } from './components/catalogue-creation-modal/catalogue-creation-modal.component';
+import { CategoryCreationModalComponent } from './components/category-creation-modal/category-creation-modal.component';
 import { CatalogueComponent } from './components/catalogue/catalogue.component';
 import { HeaderComponent } from './components/header/header.component';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductTableComponent } from './components/product-table/product-table.component';
+import { ProductPropsComponent } from './components/product-props/product-props.component';
 import { ApiService } from './services/api.service';
 
 @NgModule({
@@ -16,7 +19,10 @@ import { ApiService } from './services/api.service';
         AppComponent,
         HeaderComponent,
         CatalogueComponent,
-        CatalogueCreationModalComponent,
+        CategoryCreationModalComponent,
+        ProductListComponent,
+        ProductTableComponent,
+        ProductPropsComponent,
     ],
     imports: [
         BrowserModule,

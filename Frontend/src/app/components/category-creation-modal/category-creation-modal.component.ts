@@ -6,12 +6,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { tap } from 'rxjs/operators';
 
 @Component({
-    selector: 'catalogue-creation-modal',
-    templateUrl: 'catalogue-creation-modal.html',
-    styleUrls: ['catalogue-creation-modal.css'],
+    selector: 'category-creation-modal',
+    templateUrl: 'category-creation-modal.html',
+    styleUrls: ['category-creation-modal.css'],
     providers: [HttpClient]
 })
-export class CatalogueCreationModalComponent {
+export class CategoryCreationModalComponent {
 
     category: Category = { id: 0, name: '', description: '' };
 

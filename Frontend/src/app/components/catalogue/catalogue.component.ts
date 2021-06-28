@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
 import { Category } from '../../models';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CatalogueCreationModalComponent } from '../catalogue-creation-modal/catalogue-creation-modal.component';
+import { CategoryCreationModalComponent } from '../category-creation-modal/category-creation-modal.component';
 
 @Component({
     selector: 'catalogue',
@@ -14,6 +14,7 @@ import { CatalogueCreationModalComponent } from '../catalogue-creation-modal/cat
 export class CatalogueComponent implements OnInit {
 
     categories: Category[] = [];
+    selectedCategoryId: number = 0;
 
     constructor(
         private readonly apiService: ApiService,
@@ -30,10 +31,24 @@ export class CatalogueComponent implements OnInit {
         this.apiService.getCategories().subscribe(x => this.categories = x);
     }
 
+    setSelectedCategory(categoryId: number) {
+        this.selectedCategoryId = categoryId;
+    }
+
     openNewCategoryModal() {
-        this.modalService.open(CatalogueCreationModalComponent, {
+        this.modalService.open(CategoryCreationModalComponent, {
             animation: true,
             container: this.elRef.nativeElement
         }).result.then(() => this.load()).catch(() => { });
+    }
+
+    openEditCategoryModal(category: Category) {
+        const modal = this.modalService.open(CategoryCreationModalComponent, {
+            animation: true,
+            container: this.elRef.nativeElement
+        })
+
+        modal.result.then(() => this.load()).catch(() => { });
+        (<CategoryCreationModalComponent>modal.componentInstance).category = Object.assign({}, category);
     }
 }
