@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Category, Product } from '../models';
+import { Order } from '../models/order';
 
 @Injectable()
 export class ApiService{
@@ -34,5 +35,29 @@ export class ApiService{
 
     saveCategory(category: Category) {
         return this.http.post<void>('/api/products/categories', category);
+    }
+
+    getCurrentOrder() {
+        return this.http.get<Order>('/api/orders/current');
+    }
+
+    getOrders() {
+        return this.http.get<Order[]>('/api/orders');
+    }
+
+    getOrder(orderId: number) {
+        return this.http.get<Order>(`/api/orders/${orderId}`);
+    }
+
+    setProductOrderAmount(orderId: number, productId: number, amount: number) {
+        return this.http.post<void>(`/api/orders/${orderId}/products?productId=${productId}&amount=${amount}`, {});
+    }
+
+    removeProductOrder(orderId: number, productId: number) {
+        return this.http.delete<void>(`/api/orders/${orderId}/products/${productId}`);
+    }
+
+    setOrderCompleted(orderId: number) {
+        return this.http.post<void>(`/api/orders/${orderId}/completed`, {});
     }
 }

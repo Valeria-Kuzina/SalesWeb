@@ -1,8 +1,9 @@
-﻿import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+﻿import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
-import { Product } from '../../models/product';
-import { Subject } from 'rxjs';
+import { Product, Order } from '../../models';
+import { Subject, Subscription } from 'rxjs';
+import { OrdersService } from '../../services/orders.service';
 
 @Component({
     selector: 'product-list',
@@ -10,23 +11,31 @@ import { Subject } from 'rxjs';
     styleUrls: ['product-list.css'],
     providers: [HttpClient]
 })
-export class ProductListComponent implements OnInit, OnChanges {
+export class ProductListComponent implements OnChanges, OnDestroy {
 
     products: Product[] = [];
+
+    currentOrder: Order | undefined;
 
     @Input()
     categoryId: number = 0;
 
-    categoryIdChange$ = new Subject<number>();
+    private categoryIdChange$ = new Subject<number>();
+
+    private currentOrderSubscription: Subscription;
 
     constructor(
-        private readonly apiService: ApiService
+        private readonly apiService: ApiService,
+        private readonly orderService: OrdersService
     ) {
-        this.categoryIdChange$.pipe(
-        )
+        this.categoryIdChange$
             .subscribe(categoryId => {
                 this.loadCategory(categoryId);
             });
+
+        this.currentOrderSubscription = this.orderService.getCurrentOrder().subscribe(x => {
+            this.currentOrder = x;
+        });
     }
 
     private loadCategory(categoryId: number) {
@@ -35,12 +44,36 @@ export class ProductListComponent implements OnInit, OnChanges {
         });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.categoryId)
-            this.categoryIdChange$.next(<number>(changes.categoryId.currentValue));
+    addToOrder(product: Product) {
+        this.orderService.incrementProduct(product.id);
     }
 
-    ngOnInit() {
-        this.apiService.getProducts().subscribe(x => this.products = x);
+    getAmountOfProductOrder(productId: number) {
+        if (!this.currentOrder) return 0;
+        const productOrder = this.currentOrder.products.find(x => x.productId === productId);
+        if (!productOrder) return 0;
+        return productOrder.amount;
+    }
+
+    incrementOrder(productId: number) {
+        this.orderService.incrementProduct(productId);
+    }
+
+    decrementOrder(productId: number) {
+        this.orderService.decrementProduct(productId);
+    }
+
+    removeOrder(productId: number) {
+        this.orderService.removeProduct(productId);
+        return false;
+    }
+
+    ngOnDestroy() {
+        this.currentOrderSubscription.unsubscribe();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.categoryId)
+            this.categoryIdChange$.next(<number>changes.categoryId.currentValue);
     }
 }

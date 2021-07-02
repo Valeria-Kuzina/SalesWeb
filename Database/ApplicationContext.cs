@@ -8,6 +8,8 @@ namespace ElectronixStoreWeb.Database
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<ProductOrder> ProductOrders { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
@@ -17,17 +19,15 @@ namespace ElectronixStoreWeb.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.UseIdentityByDefaultColumns();
 
-            modelBuilder.Entity<Category>(builder =>
-            {
-                builder.HasKey(x => x.Id);
-                builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            });
+            modelBuilder.Entity<Order>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<Category>().HasKey(x => x.Id);
 
             modelBuilder.Entity<Product>(builder =>
             {
                 builder.HasKey(x => x.Id);
-                builder.Property(x => x.Id).ValueGeneratedOnAdd();
                 builder.HasOne(x => x.Category).WithMany(x => x.Products)
                     .OnDelete(DeleteBehavior.Restrict);
             });
@@ -35,9 +35,17 @@ namespace ElectronixStoreWeb.Database
             modelBuilder.Entity<ProductImage>(builder =>
             {
                 builder.HasKey(x => x.Id);
-                builder.Property(x => x.Id).ValueGeneratedOnAdd();
                 builder.HasOne(x => x.Product).WithMany(x => x.Images)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Order>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<ProductOrder>(builder =>
+            {
+                builder.HasKey(x => new { x.OrderId, x.ProductId });
+                builder.HasOne(x => x.Order).WithMany(x => x.Products).OnDelete(DeleteBehavior.Cascade);
+                builder.HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.Restrict);
             });
         }
     }

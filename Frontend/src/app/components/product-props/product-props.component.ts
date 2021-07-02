@@ -4,6 +4,7 @@ import { ApiService } from '../../services/api.service';
 import { Product } from '../../models/product';
 import { ActivatedRoute } from '@angular/router';
 import { Category } from '../../models';
+import { iif, of } from 'rxjs';
 
 @Component({
     selector: 'product-props',
@@ -34,16 +35,11 @@ export class ProductPropsComponent implements OnInit {
     }
 
     private load(id: number) {
-        if (!id) {
-            this.product = this.createNew();
-            return;
-        }
-
-        this.apiService.getProduct(id)
+        iif(() => !id, of(this.createNew()), this.apiService.getProduct(id))
             .subscribe(x => this.product = x);
     }
 
-    private createNew() {
+    private createNew(): Product {
         return {
             id: 0,
             name: '',
@@ -54,6 +50,10 @@ export class ProductPropsComponent implements OnInit {
     }
 
     save() {
+        if (!this.product) return;
+        if (!this.product.name) return;
+        if (!this.product.categoryId) return;
+
         this.apiService.saveProducts(this.product)
             .subscribe(x => this.product = x);
     }

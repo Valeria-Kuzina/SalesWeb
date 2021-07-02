@@ -1,10 +1,8 @@
 ﻿using ElectronixStoreWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ElectronixStoreWeb.Controllers
@@ -28,8 +26,7 @@ namespace ElectronixStoreWeb.Controllers
 
         [HttpGet("{id:int}")]
         public Task<Product> GetProductAsync(int id) =>
-            productService.Products.Include(x => x.Images)
-                .Include(x => x.Category).FirstAsync(x => x.Id == id);
+            productService.Products.Include(x => x.Images).FirstAsync(x => x.Id == id);
 
         [HttpGet("categories")]
         public Task<List<Category>> GetCategoriesAsync() =>
@@ -40,12 +37,8 @@ namespace ElectronixStoreWeb.Controllers
             productService.SaveCategoryAsync(category);
 
         [HttpGet("categories/{id:int}")]
-        public async Task<Category> GetCategoriesAsync(int id)
-        {
-            var res = await productService.Categories.Include(x => x.Products).FirstAsync(x => x.Id == id);
-
-            return res;
-        }
+        public Task<Category> GetCategoriesAsync(int id) =>
+            productService.Categories.Include(x => x.Products).FirstAsync(x => x.Id == id);
 
         [HttpPost("")]
         public Task<Product> SaveProductAsync([FromBody] Product product) =>

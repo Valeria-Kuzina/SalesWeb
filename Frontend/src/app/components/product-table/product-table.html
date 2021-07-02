@@ -1,19 +1,16 @@
-﻿
-<ul>
-    <li *ngFor="let product of products">{{product.name}}</li>
-</ul>
-<div class="container row">
-    <div class="card col-4" ngFor="let product of products">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Название карточки</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <a href="#" class="d-flex justify-content-center large-plus"><i class="bi bi-plus"></i></a>
-        </div>
-    </div>
+﻿<div class="container">
+    <table class="table table-striped m-4">
+        <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of products">
+                <td class="align-middle">{{product.name}}</td>
+                <td><a class="fs-4" routerLink="/products/{{product.id}}"><i class="bi bi-pencil-square"></i></a></td>
+            </tr>
+        </tbody>
+    </table>
 </div>

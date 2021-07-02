@@ -1,5 +1,6 @@
 using ElectronixStoreWeb.Controllers;
 using ElectronixStoreWeb.Database;
+using ElectronixStoreWeb.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,7 @@ namespace ElectronixStoreWeb
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
 
             services.AddScoped<ProductsService>();
+            services.AddScoped<OrdersService>();
 
             services.AddControllers();
             services.AddSpaStaticFiles(configuration =>
