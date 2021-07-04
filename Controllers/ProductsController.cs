@@ -19,9 +19,14 @@ namespace ElectronixStoreWeb.Controllers
         }
 
         [HttpGet("")]
-        public Task<List<Product>> GetProductsAsync([FromQuery] int categoryId = default) =>
+        public Task<List<Product>> GetProductsAsync(
+            [FromQuery] int categoryId = default,
+            [FromQuery] string query = default) =>
             productService.Products
                 .Where(x => categoryId == default || x.CategoryId == categoryId)
+                .Where(x => query == default ||
+                    x.Name.ToLower().Contains(query.ToLower()) ||
+                    x.Description.ToLower().Contains(query.ToLower()))
                 .OrderBy(x => x.Name).ToListAsync();
 
         [HttpGet("{id:int}")]

@@ -17,6 +17,8 @@ export class ProductListComponent implements OnChanges, OnDestroy {
 
     currentOrder: Order | undefined;
 
+    query = '';
+
     @Input()
     categoryId: number = 0;
 
@@ -39,6 +41,7 @@ export class ProductListComponent implements OnChanges, OnDestroy {
     }
 
     private loadCategory(categoryId: number) {
+        this.query = '';
         this.apiService.getProducts(categoryId).subscribe(x => {
             this.products = x;
         });
@@ -75,5 +78,12 @@ export class ProductListComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.categoryId)
             this.categoryIdChange$.next(<number>changes.categoryId.currentValue);
+    }
+
+    search() {
+        const query = this.query.trim() || undefined;
+        this.apiService.getProducts(this.categoryId, query).subscribe(x => {
+            this.products = x;
+        });
     }
 }

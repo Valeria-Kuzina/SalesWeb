@@ -13,10 +13,12 @@ export class ApiService{
         return this.http.get<Product>(`/api/products/${id}`);
     }
 
-    getProducts(categoryId?: number) {
+    getProducts(categoryId?: number, query?: string) {
         let params = new HttpParams();
         if (categoryId !== undefined)
             params = params.set('categoryId', categoryId.toString());
+        if (query !== undefined)
+            params = params.set('query', query);
 
         return this.http.get<Product[]>('/api/products', { params });
     }
