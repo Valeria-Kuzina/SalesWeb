@@ -1,32 +1,16 @@
 ﻿<div class="container row">
     <div class="card col-4" *ngFor="let product of products">
-        <ngb-carousel *ngIf="product.images">
-            <ng-template ngbSlide>
-                <div class="picsum-img-wrapper">
-                    <img src="https://gravatar.com/avatar/undefined?d=https://embed.widgetpack.com/widget/img/avatar.png&r=PG&s=36" class="d-block w-100" alt="...">
-                </div>
-            </ng-template>
-            <ng-template ngbSlide>
-                <div class="picsum-img-wrapper">
-                    <img src="https://gravatar.com/avatar/undefined?d=https://embed.widgetpack.com/widget/img/avatar.png&r=PG&s=36" class="d-block w-100" alt="...">
-                </div>
-            </ng-template>
-            <ng-template ngbSlide>
-                <div class="picsum-img-wrapper">
-                    <img src="https://gravatar.com/avatar/undefined?d=https://embed.widgetpack.com/widget/img/avatar.png&r=PG&s=36" class="d-block w-100" alt="...">
-                </div>
-            </ng-template>
-        </ngb-carousel>
         <div class="card-body">
             <div class="position-absolute fs-5 bottom-0 end-0 m-3"><a routerLink="/products/{{product.id}}"><i class="bi bi-pencil-square"></i></a></div>
             <h5 class="card-title">{{product.name}}</h5>
             <p class="card-text">{{product.description}}</p>
+            <p class="text-end fs-4">Цена: <span class="fw-bold">{{product.price}}</span></p>
             <button *ngIf="getAmountOfProductOrder(product.id) === 0" class="btn btn-primary" (click)="addToOrder(product)">Добавить в заказ</button>
             <ng-container *ngIf="getAmountOfProductOrder(product.id) > 0">
-                <button class="btn btn-primary" (click)="decrementOrder(product.id)"><i class="bi bi-dash-lg"></i></button>
-                <span class="fs-3 mx-3 align-middle">{{getAmountOfProductOrder(product.id)}}</span>
-                <button class="btn btn-primary" (click)="incrementOrder(product.id)"><i class="bi bi-plus-lg"></i></button>
-                <a href="#" (click)="removeOrder(product.id)" class="fs-3 mx-3 align-middle"><i class="bi bi-trash"></i></a>
+                <button class="fs-6 btn btn-primary" (click)="decrementOrder(product.id)"><i class="bi bi-dash-lg"></i></button>
+                <span class="fs-4 mx-3 align-middle">{{getAmountOfProductOrder(product.id)}}</span>
+                <button class="fs-6 btn btn-primary" (click)="incrementOrder(product.id)"><i class="bi bi-plus-lg"></i></button>
+                <a href="#" (click)="removeOrder(product.id)" class="fs-4 mx-3 align-middle"><i class="bi bi-trash"></i></a>
             </ng-container>
         </div>
     </div>

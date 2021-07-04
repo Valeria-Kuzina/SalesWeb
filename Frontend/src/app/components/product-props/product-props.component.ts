@@ -17,6 +17,11 @@ export class ProductPropsComponent implements OnInit {
     product: Product = this.createNew();
     categories: Category[] = [];
 
+    toasts: {
+        text: string,
+        success: boolean
+    }[] = [];
+
     constructor(
         private readonly apiService: ApiService,
         private readonly activatedRoute: ActivatedRoute,
@@ -45,16 +50,35 @@ export class ProductPropsComponent implements OnInit {
             name: '',
             description: '',
             categoryId: 0,
-            images: []
+            price: 0
         };
     }
 
     save() {
         if (!this.product) return;
-        if (!this.product.name) return;
-        if (!this.product.categoryId) return;
+
+        if (!this.product.categoryId) {
+            this.toasts.push({ text: 'Выберите категорию', success: false });
+            return;
+        }
+
+        if (!this.product.name?.trim()) {
+            this.toasts.push({ text: 'Введите наименование', success: false });
+            return;
+        }
+
+        if (!this.product.price || this.product.price <= 0) {
+            this.toasts.push({ text: 'Укажите цену', success: false });
+            return;
+        }
 
         this.apiService.saveProducts(this.product)
             .subscribe(x => this.product = x);
+
+        this.toasts.push({ text: 'Изменения сохранены!', success: true });
+    }
+
+    removeToast(toast: {}) {
+        this.toasts = this.toasts.filter(x => x !== toast);
     }
 }

@@ -37,6 +37,13 @@ export class CartComponent implements OnDestroy {
         this.orderSubscription?.unsubscribe();
     }
 
+    get total() {
+        if (!this.order || !this.products) return 0;
+        return this.order.products
+            .map(x => x.amount * this.products.get(x.productId)!.price)
+            .reduce((a, v) => a + v, 0);
+    }
+
     decrement(productId: number) {
         this.ordersService.decrementProduct(productId);
         return false;

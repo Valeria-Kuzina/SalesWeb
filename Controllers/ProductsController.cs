@@ -26,7 +26,7 @@ namespace ElectronixStoreWeb.Controllers
 
         [HttpGet("{id:int}")]
         public Task<Product> GetProductAsync(int id) =>
-            productService.Products.Include(x => x.Images).FirstAsync(x => x.Id == id);
+            productService.Products.FirstAsync(x => x.Id == id);
 
         [HttpGet("categories")]
         public Task<List<Category>> GetCategoriesAsync() =>

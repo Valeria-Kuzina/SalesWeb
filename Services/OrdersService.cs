@@ -38,7 +38,7 @@ namespace ElectronixStoreWeb.Services
 
         public Task<List<Order>> GetOrdersAsync() =>
             context.Orders.AsNoTracking().Include(x => x.Products)
-                .OrderBy(x => x.CreationTime).ToListAsync();
+                .Where(x => x.IsCompleted).OrderBy(x => x.CreationTime).ToListAsync();
 
         public Task<Order> GetOrderAsync(int orderId) =>
             context.Orders.AsNoTracking().Include(x => x.Products)

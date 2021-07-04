@@ -3,15 +3,17 @@ using System;
 using ElectronixStoreWeb.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ElectronixStoreWeb.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210703204140_Price")]
+    partial class Price
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,6 +83,26 @@ namespace ElectronixStoreWeb.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("ElectronixStoreWeb.Models.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Base64")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+                });
+
             modelBuilder.Entity("ElectronixStoreWeb.Models.ProductOrder", b =>
                 {
                     b.Property<int>("OrderId")
@@ -110,6 +132,17 @@ namespace ElectronixStoreWeb.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("ElectronixStoreWeb.Models.ProductImage", b =>
+                {
+                    b.HasOne("ElectronixStoreWeb.Models.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ElectronixStoreWeb.Models.ProductOrder", b =>
                 {
                     b.HasOne("ElectronixStoreWeb.Models.Order", "Order")
@@ -137,6 +170,11 @@ namespace ElectronixStoreWeb.Migrations
             modelBuilder.Entity("ElectronixStoreWeb.Models.Order", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ElectronixStoreWeb.Models.Product", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

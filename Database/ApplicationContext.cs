@@ -7,7 +7,6 @@ namespace ElectronixStoreWeb.Database
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<ProductOrder> ProductOrders { get; set; }
 
@@ -21,8 +20,6 @@ namespace ElectronixStoreWeb.Database
             base.OnModelCreating(modelBuilder);
             modelBuilder.UseIdentityByDefaultColumns();
 
-            modelBuilder.Entity<Order>().HasKey(x => x.Id);
-
             modelBuilder.Entity<Category>().HasKey(x => x.Id);
 
             modelBuilder.Entity<Product>(builder =>
@@ -30,13 +27,6 @@ namespace ElectronixStoreWeb.Database
                 builder.HasKey(x => x.Id);
                 builder.HasOne(x => x.Category).WithMany(x => x.Products)
                     .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<ProductImage>(builder =>
-            {
-                builder.HasKey(x => x.Id);
-                builder.HasOne(x => x.Product).WithMany(x => x.Images)
-                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Order>().HasKey(x => x.Id);
